@@ -2,22 +2,26 @@ require 'spec_helper'
 
 RSpec.describe Nameable, type: :module do
 
-  class ThingWithNoFields 
+  class Thing < OpenStruct
+    include ActiveModel::Validations
+    include Nameable
+  end
+  class ThingWithNoFields < Thing 
     def self.column_names
       []
     end
   end
-  class ThingWithFirstname 
+  class ThingWithFirstname < Thing 
     def self.column_names
       %w{firstname} 
     end
   end
-  class ThingWithLastname 
+  class ThingWithLastname  < Thing
     def self.column_names
       %w{lastname} 
     end
   end
-  class ThingWithAllFields<OpenStruct
+  class ThingWithAllFields < Thing
     def self.column_names
       %w{firstname lastname} 
     end
@@ -27,25 +31,37 @@ RSpec.describe Nameable, type: :module do
   let(:lastname){"Shuttleworth"}
   let(:thing){ThingWithAllFields.new(firstname: firstname,lastname: lastname)}
 
-  describe "when included" do
+  describe "validations" do
     context "where the includer has all name fields" do
-      it "should not get in the way of creation" do
-        expect{ThingWithAllFields.include(Nameable)}.to_not raise_error
+      context "where all the values are present" do
+        let(:thing){ThingWithAllFields.new(firstname: "Terry", lastname: "S")}
+        it "should be_valid" do
+          expect(thing).to be_valid
+        end
+      end
+      context "where a value is missing" do
+        let(:thing){ThingWithAllFields.new(firstname: "", lastname: "S")}
+        it "should not be_valid" do
+          expect(thing).to_not be_valid
+        end
       end
     end
     context "where the includer has only firstname" do
-      it "should raise error" do
-        expect{ThingWithFirstname.include(Nameable)}.to raise_error(RuntimeError) 
+      let(:thing){ThingWithFirstname.new(firstname: "Terry")}
+      it "should not be_valid" do
+        expect(thing).to_not be_valid
       end
     end
     context "where the includer has only lastname" do
-      it "should raise error" do
-        expect{ThingWithLastname.include(Nameable)}.to raise_error(RuntimeError) 
+      let(:thing){ThingWithLastname.new(lastname: "Terry")}
+      it "should not be_valid" do
+        expect(thing).to_not be_valid
       end
     end
     context "where the includer has no name fields" do
-      it "should raise error" do
-        expect{ThingWithNoFields.include(Nameable)}.to raise_error(RuntimeError) 
+      let(:thing){ThingWithNoFields.new}
+      it "should not be_valid" do
+        expect(thing).to_not be_valid
       end
     end
   end

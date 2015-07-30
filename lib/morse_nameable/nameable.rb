@@ -3,8 +3,8 @@ module Nameable
   extend ActiveSupport::Concern
 
   included do
-    validate_column_names(*%w{firstname lastname})
     load_required_attributes(*%w{firstname lastname})
+    validate_required_attributes
   end
 
   public
@@ -18,6 +18,11 @@ module Nameable
   end
 
   private
+
+  def required_database_fields
+    result=defined?(super) ? super : []
+    result+=[:firstname, :lastname]
+  end
 
 end
 
