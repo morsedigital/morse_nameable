@@ -38,6 +38,7 @@ RSpec.describe Nameable, type: :module do
 
   let(:firstname){"Terry"}
   let(:lastname){"Shuttleworth"}
+  let(:test_string){"whev"}
   let(:thing){ThingWithAllFields.new(firstname: firstname,lastname: lastname)}
 
   describe "validations" do
@@ -79,14 +80,41 @@ RSpec.describe Nameable, type: :module do
     end
   end
 
-  describe "full_name" do
-    it "should return firstname lastname" do
-      expect(thing.full_name).to eq("#{firstname} #{lastname}")
+  describe "instance functions" do
+
+    describe "first_name" do
+      it "should return firstname" do
+        expect(thing.first_name).to eq(thing.firstname)
+      end
     end
-  end
-  describe "proper_name" do
-    it "should return LASTNAME, firstname" do
-      expect(thing.proper_name).to eq("#{lastname.upcase}, #{firstname}")
+    describe "first_name=" do
+      it "should set firstname" do
+        expect(thing.firstname).to_not eq(test_string)
+        thing.first_name=test_string
+        expect(thing.firstname).to eq(test_string)
+      end
+    end
+    describe "full_name" do
+      it "should return firstname lastname" do
+        expect(thing.full_name).to eq("#{firstname} #{lastname}")
+      end
+    end
+    describe "proper_name" do
+      it "should return LASTNAME, firstname" do
+        expect(thing.proper_name).to eq("#{lastname.upcase}, #{firstname}")
+      end
+    end
+    describe "surname" do
+      it "should return lastname" do
+        expect(thing.surname).to eq(thing.lastname)
+      end
+    end
+    describe "surname=" do
+      it "should set lastname" do
+        expect(thing.lastname).to_not eq(test_string)
+        thing.surname=test_string
+        expect(thing.lastname).to eq(test_string)
+      end
     end
   end
 

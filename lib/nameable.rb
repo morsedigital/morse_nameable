@@ -24,12 +24,29 @@ module Nameable
 
   public
 
+  def first_name
+    firstname
+  end
+
+  def first_name=(thing)
+    self.firstname=thing
+  end
+
   def full_name
     "#{firstname} #{lastname}"
   end
 
   def proper_name
     "#{lastname.upcase}, #{firstname}"
+  end
+
+  def surname
+    lastname
+  end
+
+
+  def surname=(thing)
+    self.lastname=thing
   end
 
   private
