@@ -35,6 +35,11 @@ RSpec.describe Nameable, type: :module do
       %w{firstname lastname} 
     end
   end
+  class ThingWithAllFieldsAndTitle < ThingWithAllFields
+    def title
+      "whev"
+    end
+  end
 
   let(:firstname){"Terry"}
   let(:lastname){"Shuttleworth"}
@@ -114,6 +119,19 @@ RSpec.describe Nameable, type: :module do
         expect(thing.lastname).to_not eq(test_string)
         thing.surname=test_string
         expect(thing.lastname).to eq(test_string)
+      end
+    end
+
+    describe "title" do
+      context "where the includer already has a title" do
+        it "should return that" do
+          expect(ThingWithAllFieldsAndTitle.new.title).to eq("whev")
+        end
+      end
+      context "where the includer does not have a title" do
+        it "should return the full name" do
+          expect(thing.title).to eq(thing.full_name)
+        end
       end
     end
   end

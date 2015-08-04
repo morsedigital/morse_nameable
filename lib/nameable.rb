@@ -44,9 +44,13 @@ module Nameable
     lastname
   end
 
-
   def surname=(thing)
     self.lastname=thing
+  end
+
+  def title
+    return super if defined?(super)
+    full_name
   end
 
   private
